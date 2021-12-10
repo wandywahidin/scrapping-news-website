@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import json
+import pandas as pd
 
 url = 'https://www.detik.com'
 headers = {
@@ -29,14 +30,19 @@ def get_news_popular():
         popular_news.append(result)
 
     try:
-        os.mkdir('json_result')
+        os.mkdir('detikcom/json_result')
     except FileExistsError:
         pass
 
-    with open('json_result/popular_news.json', 'w+') as json_data:
+    with open('detikcom/json_result/popular_news.json', 'w+') as json_data:
         json.dump(popular_news, json_data)
-    print('json created')
+
+        try:
+            os.mkdir('detikcom/csv_result')
+        except FileExistsError:
+            pass
+        df = pd.DataFrame(popular_news)
+        df.to_csv('detikcom/csv_result/popular_news.csv', index=False)
 
 
-if __name__ == '__main__':
-    get_news_popular()
+
